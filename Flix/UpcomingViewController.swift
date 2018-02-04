@@ -1,5 +1,5 @@
 //
-//  NowPlayingViewController.swift
+//  UpcominggViewController.swift
 //  flix_demo_03
 //
 //  Created by Kelvin Lui on 1/30/18.
@@ -9,16 +9,17 @@
 import UIKit
 import AlamofireImage
 
-class NowPlayingViewController: UIViewController, UITableViewDataSource {
+class UpcomingViewController: UIViewController, UITableViewDataSource {
     
     var movies: [[String: Any]] = []
     var refreshControl: UIRefreshControl!
     var activityIndicator: UIActivityIndicatorView!
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Current"
+        self.title = "Upcoming"
         
         // Setup activity indicator
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
@@ -49,7 +50,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
             cell.posterImageView.image = UIImage(named: "now_playing_tabbar_item")
         }
         
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=691c5b632bbc96d6fa9724c296db22bf&language=en-US&page=1")!
+        let url = URL(string: "https://api.themoviedb.org/3/movie/upcoming?api_key=691c5b632bbc96d6fa9724c296db22bf&language=en-US&page=1")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -118,6 +119,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
         }
     }
 }
+
 
 
 
