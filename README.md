@@ -2,7 +2,7 @@
 
 **Flix** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **5+** hours spent in total
+Time spent: **6+** hours spent in total
 
 ## User Stories
 
@@ -19,29 +19,31 @@ The following **optional** user stories are implemented:
 - [ ] User can search for a movie (+3pt)
 - [x] While poster is being fetched, user see's a placeholder image (+1pt)
 - [ ] User sees image transition for images coming from network, not when it is loaded from cache (+1pt)
-- [ ] Customize the selection effect of the cell (+1pt)
+- [x] Customize the selection effect of the cell (+1pt)
 - [ ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete (+2pt)
 
 The following **additional** user stories are implemented:
 
 - [ ] List anything else that you can get done to improve the app functionality! (+1-3pts)
+- [x] User can tap on the movies to see their rating and entire overview
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. How to segue from one view controller to multiple other view controllers based on the cell tapped by the user?
+2. How to filter an array of dictionaries for search bar to work? 
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://imgur.com/a/doXER' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
 Describe any challenges encountered while building the app.
+It takes some time to learn the concepts of fetching JSON data, segues between view controllers, and view table. 
 
 ## License
 
