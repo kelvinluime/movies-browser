@@ -18,7 +18,8 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Current"
+        
+        self.title = "Now Playing"
         
         // Setup activity indicator
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
@@ -103,18 +104,8 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = tableView.indexPathForSelectedRow {
             let movie = movies[indexPath.row]
-            let overview = movie["overview"] as! String
-            let posterPathString = movie["poster_path"] as! String
-            let baseURLString = "https://image.tmdb.org/t/p/w500"
-            let posterURL = URL(string: baseURLString + posterPathString)!
-            let rating = movie["vote_average"] as! Double
-            let title = movie["title"] as! String
             let detailViewController = segue.destination as! DetailViewController
-            
-            detailViewController.posterURL = posterURL
-            detailViewController.overviewText = overview
-            detailViewController.titleText = title
-            detailViewController.ratingText = "Rating: \(rating)"
+            detailViewController.movie = movie
         }
     }
 }
