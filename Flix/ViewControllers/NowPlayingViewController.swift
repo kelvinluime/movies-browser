@@ -11,7 +11,8 @@ import AlamofireImage
 
 class NowPlayingViewController: UIViewController, UITableViewDataSource {
     
-    var movies: [[String: Any]] = []
+    var movies: [Movie] = []
+//    var movieDictionaries: [[String: Any]] = []
     var refreshControl: UIRefreshControl!
     var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
@@ -53,22 +54,30 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
             cell.posterImageView.image = UIImage(named: "now_playing_tabbar_item")
         }
         
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=691c5b632bbc96d6fa9724c296db22bf&language=en-US&page=1")!
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
-        let task = session.dataTask(with: request) { (data, response, error) in
-            // This will run when the network request returns
-            if let _ = error {
-                let alert = UIAlertController(title: "Network Error", message: "Unable to load data. Please connect to the Internet and try again.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: { action in self.fetchMovies() }))
-                self.present(alert, animated: true)
-                
-            } else if let data = data {
-                let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                self.movies = dataDictionary["results"] as! [[String: Any]]
-                
+//        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=691c5b632bbc96d6fa9724c296db22bf&language=en-US&page=1")!
+//        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+//        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
+//        let task = session.dataTask(with: request) { (data, response, error) in
+//            // This will run when the network request returns
+//            if let _ = error {
+//                let alert = UIAlertController(title: "Network Error", message: "Unable to load data. Please connect to the Internet and try again.", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: { action in self.fetchMovies() }))
+//                self.present(alert, animated: true)
+//
+//            } else if let data = data {
+//                let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+//                self.movies = Movie.movies(dictionaries: dataDictionary["results"] as! [[String: Any]])
+//
+//                self.tableView.reloadData()
+//                self.refreshControl.endRefreshing()
+//
+//            }
+//        }
+        
+        MovieApiManager().nowPlayingMovies { (movies: [Movie]?, error: Error?) in
+            if let movies = movies {
+                self.movies = movies
                 self.tableView.reloadData()
-                self.refreshControl.endRefreshing()
             }
         }
         
@@ -76,7 +85,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.activityIndicator.stopAnimating()
         }
-        task.resume()
+//        task.resume()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -85,16 +94,17 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        let movie = movies[indexPath.row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        let posterPathString = movie["poster_path"] as! String
-        let baseURLString = "https://image.tmdb.org/t/p/w500"
-        let posterURL = URL(string: baseURLString + posterPathString)!
-        
-        cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.posterImageView.af_setImage(withURL: posterURL)
+        cell.movie = movies[indexPath.row]
+//        let movie = movies[indexPath.row]
+//        let title = movie["title"] as! String
+//        let overview = movie["overview"] as! String
+//        let posterPathString = movie["poster_path"] as! String
+//        let baseURLString = "https://image.tmdb.org/t/p/w500"
+//        let posterURL = URL(string: baseURLString + posterPathString)!
+//
+//        cell.titleLabel.text = title
+//        cell.overviewLabel.text = overview
+//        cell.posterImageView.af_setImage(withURL: posterURL)
         
         return cell
     }

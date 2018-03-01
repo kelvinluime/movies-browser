@@ -14,6 +14,18 @@ class MovieCell: UITableViewCell {
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var posterImageView: UIImageView!
     
+    var movie: Movie! {
+        didSet {
+            titleLabel.text = movie.title
+            overviewLabel.text = movie.overview
+            if let url = movie.posterUrl {
+                posterImageView.af_setImage(withURL: url)
+            } else {
+                posterImageView.image = #imageLiteral(resourceName: "now_playing_tabbar_item")
+            }
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

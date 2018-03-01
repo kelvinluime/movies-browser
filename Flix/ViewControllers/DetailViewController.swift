@@ -26,7 +26,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var releaseDataLabel: UILabel!
     
-    var movie: [String: Any]?
+    var movie: Movie!
     var posterURL: URL!
     var backdropURL: URL!
     var overviewText: String!
@@ -38,27 +38,28 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
     
         // Do any additional setup after loading the view.
-        overviewText = movie!["overview"] as! String
-        let posterPathString = movie!["poster_path"] as! String
-        let backdropPathString = movie![MovieKeys.backDropPath] as! String
-        posterURL = URL(string: baseURLString + posterPathString)!
-        backdropURL = URL(string: baseURLString + backdropPathString)!
-        releaseDateText = movie!["release_date"] as! String
-        titleText = movie![MovieKeys.title] as! String
+//        overviewText = movie!["overview"] as! String
+//        let posterPathString = movie!["poster_path"] as! String
+//        let backdropPathString = movie![MovieKeys.backDropPath] as! String
+//        posterURL = URL(string: baseURLString + posterPathString)!
+//        backdropURL = URL(string: baseURLString + backdropPathString)!
+//        releaseDateText = movie!["release_date"] as! String
+//        titleText = movie![MovieKeys.title] as! String
         
-        overviewTextLabel.text = overviewText
-        posterImageView.af_setImage(withURL: posterURL)
-        releaseDataLabel.text = releaseDateText
-        titleLabel.text = titleText
-        backdropImageView.af_setImage(withURL: backdropURL)
+        overviewTextLabel.text = movie.overview
+        if let url = movie.posterUrl {
+            posterImageView.af_setImage(withURL: url)
+        } else {
+            posterImageView.image = #imageLiteral(resourceName: "now_playing_tabbar_item")
+        }
+        releaseDataLabel.text = movie.releaseDate
+        titleLabel.text = movie.title
+        backdropImageView.af_setImage(withURL: movie.backDropUrl!)
         
         titleLabel.sizeToFit()
         titleLabel.numberOfLines = 0
         overviewTextLabel.sizeToFit()
         overviewTextLabel.numberOfLines = 0
-        
-        
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,6 +79,6 @@ class DetailViewController: UIViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         let trailerViewController = segue.destination as! TrailerViewController
-        trailerViewController.movieId = movie![MovieKeys.id] as! Int
+        trailerViewController.movieId = movie.id
     }
 }

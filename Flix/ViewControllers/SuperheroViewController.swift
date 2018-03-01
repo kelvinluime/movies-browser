@@ -12,7 +12,8 @@ class SuperheroViewController: UIViewController, UICollectionViewDataSource {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var movies: [[String: Any]] = []
+    var oldMovies: [[String: Any]] = []
+    var movies: [Movie] = []
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
@@ -20,12 +21,12 @@ class SuperheroViewController: UIViewController, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
+//        let movie = oldMovies[indexPath.item]
         let movie = movies[indexPath.item]
-        if let posterPathString = movie["poster_path"] as? String {
-            let baseURLString = "https://image.tmdb.org/t/p/w500"
-            let posterURL = URL(string: baseURLString + posterPathString)!
-            cell.posterImageView.af_setImage(withURL: posterURL)
-        }
+//        if let posterPathString = movie.posterUrl as? String {
+//            let baseURLString = "https://image.tmdb.org/t/p/w500"
+//            let posterURL = URL(string: baseURLString + posterPathString)!
+        cell.posterImageView.af_setImage(withURL: movie.posterUrl!)
         return cell
     }
     
@@ -36,30 +37,43 @@ class SuperheroViewController: UIViewController, UICollectionViewDataSource {
         //            cell.posterImageView.image = UIImage(named: "now_playing_tabbar_item")
         //        }
         
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=691c5b632bbc96d6fa9724c296db22bf&language=en-US&page=1")!
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
-        let task = session.dataTask(with: request) { (data, response, error) in
-            // This will run when the network request returns
-            if let _ = error {
-                //                let alert = UIAlertController(title: "Network Error", message: "Unable to load data. Please connect to the Internet and try again.", preferredStyle: .alert)
-                //                alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: { action in self.fetchMovies() }))
-                //                self.present(alert, animated: true)
-                
-            } else if let data = data {
-                let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                self.movies = dataDictionary["results"] as! [[String: Any]]
-                
+//        MovieApiManager().nowPlayingMovies { (movies: [Movie]?, error: Error?) in
+//            if let movies = movies {
+//                self.movies = movies
+//                self.collectionView.reloadData()
+//            }
+//        }
+        
+        MovieApiManager().popularMovies { (movies: [Movie]?, error: Error?) in
+            if let movies = movies {
+                self.movies = movies
                 self.collectionView.reloadData()
-                //                self.refreshControl.endRefreshing()
             }
         }
+        
+//        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=691c5b632bbc96d6fa9724c296db22bf&language=en-US&page=1")!
+//        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+//        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
+//        let task = session.dataTask(with: request) { (data, response, error) in
+//            // This will run when the network request returns
+//            if let _ = error {
+//                //                let alert = UIAlertController(title: "Network Error", message: "Unable to load data. Please connect to the Internet and try again.", preferredStyle: .alert)
+//                //                alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: { action in self.fetchMovies() }))
+//                //                self.present(alert, animated: true)
+//
+//            } else if let data = data {
+//                let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+////                self.oldMovies = dataDictionary["results"] as! [[String: Any]]
+//                self.movies = Movie.movies(dictionaries: dataDictionary["results"] as! [[String: Any]])
+//                self.collectionView.reloadData()
+//            }
+//        }
         
         // Intentionally extend activity indicator animation period to illustrate it on the screen
         //        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
         //            self.activityIndicator.stopAnimating()
         //        }
-        task.resume()
+//        task.resume()
     }
     
     override func viewDidLoad() {
@@ -97,6 +111,7 @@ class SuperheroViewController: UIViewController, UICollectionViewDataSource {
         // Pass the selected object to the new view controller.
         
         if let indexPathList = collectionView.indexPathsForSelectedItems {
+//            let movie = oldMovies[indexPathList[0].item]
             let movie = movies[indexPathList[0].item]
             let detailViewContoller = segue.destination as! DetailViewController
             detailViewContoller.movie = movie
